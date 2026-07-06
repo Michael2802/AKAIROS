@@ -7,7 +7,7 @@ type Message = {
   time: string;
 };
 
-const PHONE = "573001234567";
+const PHONE = "573507318986";
 
 const quickReplies = [
   "Quiero cotizar impermeabilización",
