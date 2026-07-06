@@ -52,11 +52,15 @@ const WhatsAppBot = () => {
     setMessages((m) => [...m, { from: "user", text, time: now() }]);
     setInput("");
     setTimeout(() => {
+      const isKnown = text in botFlow;
       const reply =
         botFlow[text] ??
         "Gracias por tu mensaje 🙌 Un asesor revisará tu solicitud. Mientras tanto, puedes elegir una de las opciones rápidas o continuar la conversación por WhatsApp.";
       setMessages((m) => [...m, { from: "bot", text: reply, time: now() }]);
-      if (text === "Hablar con un asesor") setHandoff(true);
+      // Muestra el botón de WhatsApp real siempre que el usuario pida un asesor
+      // o cuando el mensaje no coincide con ninguna respuesta predefinida (fallback),
+      // para no dar la falsa sensación de que ya escribió a la empresa.
+      if (text === "Hablar con un asesor" || !isKnown) setHandoff(true);
     }, 700);
   };
 
