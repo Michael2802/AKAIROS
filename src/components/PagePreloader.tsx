@@ -20,7 +20,7 @@ const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
 
   useEffect(() => {
     if (progress === 100) {
-      const t = setTimeout(() => setPhase("reveal"), 300);
+      const t = setTimeout(() => setPhase("reveal"), 400);
       return () => clearTimeout(t);
     }
   }, [progress]);
@@ -30,115 +30,245 @@ const PagePreloader = ({ onComplete }: { onComplete: () => void }) => {
       const t = setTimeout(() => {
         setPhase("done");
         onComplete();
-      }, 900);
+      }, 800);
       return () => clearTimeout(t);
     }
   }, [phase, onComplete]);
 
   if (phase === "done") return null;
 
-  // Stadium grass green + world cup vibe
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center bg-navy overflow-hidden transition-all duration-700 ${
+      className={`fixed inset-0 z-[100] flex items-center justify-center bg-white overflow-hidden transition-all duration-700 ${
         phase === "reveal" ? "opacity-0 pointer-events-none" : ""
       }`}
     >
-      {/* Stadium field lines */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/2 left-0 right-0 h-px bg-white" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 border-2 border-white rounded-full" />
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-32 h-56 border-2 border-l-0 border-white" />
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-32 h-56 border-2 border-r-0 border-white" />
-      </div>
+      {/* Subtle grid background */}
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #0C1A2A 1px, transparent 1px), linear-gradient(to bottom, #0C1A2A 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+      />
 
-      {/* Confetti flags */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <span
-            key={i}
-            className="absolute text-2xl animate-bounce"
-            style={{
-              left: `${(i * 8.5) % 100}%`,
-              top: `${(i * 13) % 80}%`,
-              animationDelay: `${i * 0.15}s`,
-              animationDuration: `${1.5 + (i % 3) * 0.3}s`,
-            }}
+      {/* Floating accents */}
+      <span className="absolute top-[22%] left-[18%] text-primary text-2xl animate-pulse">+</span>
+      <span
+        className="absolute bottom-[26%] left-[22%] w-2 h-2 rounded-full bg-red-500 animate-pulse"
+        style={{ animationDelay: "0.4s" }}
+      />
+      <span
+        className="absolute top-[28%] right-[20%] w-3 h-3 rounded-full border-2 border-primary animate-pulse"
+        style={{ animationDelay: "0.8s" }}
+      />
+
+      <div className="relative flex flex-col items-center gap-10">
+        {/* Isometric blueprint scene */}
+        <div className="relative w-[320px] h-[240px]">
+          <svg
+            viewBox="0 0 320 240"
+            className="w-full h-full"
+            style={{ overflow: "visible" }}
           >
-            {["🇨🇴", "⚽", "🏆", "🎉"][i % 4]}
-          </span>
-        ))}
-      </div>
+            <defs>
+              <clipPath id="blueprint-clip">
+                {/* Rolled paper shape */}
+                <path d="M40 180 L40 130 Q40 120 50 118 L240 90 Q250 88 255 96 L275 130 Q280 138 272 142 L80 195 Q68 200 60 195 Z" />
+              </clipPath>
+            </defs>
 
-      {/* Center content */}
-      <div className="relative flex flex-col items-center gap-8 z-10">
-        {/* Logo + soccer ball */}
-        <div
-          className={`flex items-center gap-3 transition-all duration-700 ${
-            progress > 0 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
-          <div className="relative w-16 h-16 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/30">
-            <span className="text-4xl animate-spin" style={{ animationDuration: "2s" }}>
-              ⚽
-            </span>
-          </div>
-          <div>
-            <span className="text-primary-foreground font-heading text-3xl font-bold tracking-widest block leading-none">
+            {/* Blueprint paper (bottom) */}
+            <g className="animate-[fadeIn_0.6s_ease-out_0.1s_both]">
+              {/* Paper roll left curl */}
+              <path
+                d="M40 180 Q30 175 32 165 L34 128 Q36 118 46 118 L50 118 L50 175 Q50 185 40 180 Z"
+                fill="#F3F5F8"
+                stroke="#0C1A2A"
+                strokeWidth="1.5"
+              />
+              {/* Main paper */}
+              <path
+                d="M50 118 L240 90 Q252 88 258 98 L278 132 Q283 142 273 146 L82 200 Q70 204 62 198 L44 178 Q38 170 44 165 L50 118 Z"
+                fill="#FAFBFD"
+                stroke="#0C1A2A"
+                strokeWidth="1.5"
+              />
+              {/* Right paper curl */}
+              <path
+                d="M258 98 Q268 96 272 104 L288 134 Q292 142 284 144 L278 132 Q283 142 273 146 L268 138 Z"
+                fill="#EEF1F5"
+                stroke="#0C1A2A"
+                strokeWidth="1.5"
+              />
+
+              {/* Blueprint lines - drawn with clip */}
+              <g clipPath="url(#blueprint-clip)" stroke="#0C1A2A" strokeWidth="1.2" fill="none">
+                <path
+                  d="M90 155 L90 125 L180 108 L180 138 Z"
+                  strokeDasharray="200"
+                  strokeDashoffset="200"
+                  style={{ animation: "drawLine 1.2s ease-out 0.6s forwards" }}
+                />
+                <path
+                  d="M130 148 L130 118"
+                  strokeDasharray="40"
+                  strokeDashoffset="40"
+                  style={{ animation: "drawLine 0.6s ease-out 1.4s forwards" }}
+                />
+                <path
+                  d="M110 152 L110 122 M150 144 L150 114"
+                  strokeDasharray="40"
+                  strokeDashoffset="40"
+                  style={{ animation: "drawLine 0.6s ease-out 1.6s forwards" }}
+                />
+                <rect
+                  x="195"
+                  y="105"
+                  width="30"
+                  height="18"
+                  strokeDasharray="100"
+                  strokeDashoffset="100"
+                  style={{ animation: "drawLine 0.8s ease-out 1.2s forwards" }}
+                />
+              </g>
+            </g>
+
+            {/* Dashed measurement outline */}
+            <path
+              d="M80 100 L200 78 L215 92 L95 115 Z"
+              fill="none"
+              stroke="#0C1A2A"
+              strokeWidth="1"
+              strokeDasharray="4 3"
+              className="animate-[fadeIn_0.5s_ease-out_0.5s_both]"
+            />
+
+            {/* Hard hat */}
+            <g
+              className="animate-[floatY_2.4s_ease-in-out_infinite]"
+              style={{ transformOrigin: "90px 70px" }}
+            >
+              {/* Brim */}
+              <ellipse cx="90" cy="82" rx="42" ry="10" fill="#FAFBFD" stroke="#0C1A2A" strokeWidth="1.5" />
+              {/* Dome */}
+              <path
+                d="M58 82 Q60 50 90 46 Q120 50 122 82 Z"
+                fill="#FAFBFD"
+                stroke="#0C1A2A"
+                strokeWidth="1.5"
+              />
+              {/* Ridge */}
+              <path d="M90 46 L90 82" stroke="#0C1A2A" strokeWidth="1.2" fill="none" />
+              <path d="M72 50 Q90 62 108 50" stroke="#0C1A2A" strokeWidth="1.2" fill="none" />
+              {/* Shadow band */}
+              <path d="M58 80 Q90 88 122 80" stroke="#0C1A2A" strokeWidth="1" fill="none" opacity="0.6" />
+            </g>
+
+            {/* Blue set-square (ruler triangle) */}
+            <g
+              className="animate-[floatY_2.4s_ease-in-out_infinite]"
+              style={{ animationDelay: "0.4s", transformOrigin: "230px 60px" }}
+            >
+              <path
+                d="M195 40 L265 40 Q272 40 272 47 L272 78 Q272 82 268 80 L192 44 Q188 42 195 40 Z"
+                fill="hsl(var(--primary))"
+                stroke="#0C1A2A"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M205 48 L258 48 Q262 48 262 52 L262 72 Q262 74 259 72 L204 51 Q201 49 205 48 Z"
+                fill="none"
+                stroke="#FAFBFD"
+                strokeWidth="1"
+                opacity="0.7"
+              />
+              {/* Tick marks */}
+              <g stroke="#FAFBFD" strokeWidth="1" opacity="0.8">
+                <line x1="215" y1="42" x2="215" y2="46" />
+                <line x1="225" y1="42" x2="225" y2="46" />
+                <line x1="235" y1="42" x2="235" y2="46" />
+                <line x1="245" y1="42" x2="245" y2="46" />
+                <line x1="255" y1="42" x2="255" y2="46" />
+              </g>
+            </g>
+
+            {/* Pencil - drawing on blueprint */}
+            <g style={{ transformOrigin: "180px 110px" }}>
+              <g className="animate-[pencilDraw_2.4s_ease-in-out_infinite]">
+                {/* Body */}
+                <path
+                  d="M155 90 L215 80 L220 92 L160 102 Z"
+                  fill="#FAFBFD"
+                  stroke="#0C1A2A"
+                  strokeWidth="1.5"
+                />
+                {/* Grip stripe */}
+                <path d="M200 82 L215 80 L220 92 L205 94 Z" fill="hsl(var(--primary))" stroke="#0C1A2A" strokeWidth="1.2" />
+                {/* Metal ferrule */}
+                <path d="M198 83 L200 82 L205 94 L203 94 Z" fill="#0C1A2A" />
+                {/* Tip */}
+                <path d="M155 90 L145 102 L160 102 Z" fill="#FAFBFD" stroke="#0C1A2A" strokeWidth="1.5" />
+                {/* Lead */}
+                <path d="M148 100 L145 102 L152 101 Z" fill="#0C1A2A" />
+                {/* Eraser dot (red) */}
+                <circle cx="217" cy="86" r="1.6" fill="#EF4444" />
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        {/* Brand */}
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex items-baseline gap-2">
+            <span className="text-navy font-heading text-3xl font-bold tracking-[0.25em]">
               AKAIROS
             </span>
-            <span className="text-primary text-[11px] font-body tracking-[0.3em] uppercase">
-              Construyendo el Mundial 2026
+          </div>
+          <span className="text-navy/50 text-[10px] font-body tracking-[0.4em] uppercase">
+            Proyectos &amp; Servicios
+          </span>
+        </div>
+
+        {/* Progress */}
+        <div className="w-64">
+          <div className="h-[3px] bg-navy/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full transition-all duration-100 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="flex items-center justify-between mt-3">
+            <p className="text-navy/50 text-[10px] font-body tracking-[0.3em] uppercase">
+              {progress < 100 ? "Trazando planos" : "Listo"}
+            </p>
+            <span className="text-navy/70 font-body text-[10px] tracking-widest">
+              {String(progress).padStart(3, "0")}%
             </span>
           </div>
         </div>
-
-        {/* Trophy line */}
-        <div
-          className={`flex items-center gap-2 text-primary-foreground/80 text-sm font-body transition-all duration-700 ${
-            progress > 30 ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <span className="text-xl">🏆</span>
-          <span>Calidad de campeones en cada proyecto</span>
-          <span className="text-xl">🏆</span>
-        </div>
-
-        {/* Progress bar - shaped like a field */}
-        <div className="w-72 relative">
-          <div className="h-2 bg-primary-foreground/10 rounded-full overflow-hidden border border-white/20">
-            <div
-              className="h-full bg-gradient-to-r from-green-500 via-primary to-yellow-400 rounded-full transition-all duration-100 ease-out relative"
-              style={{ width: `${progress}%` }}
-            >
-              <span className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 text-xs">
-                ⚽
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center justify-between mt-3">
-            <p className="text-primary-foreground/50 text-xs font-body tracking-widest uppercase">
-              {progress < 100 ? "Calentando motores" : "¡Listos para jugar!"}
-            </p>
-            <span className="text-primary font-body text-xs font-semibold">{progress}%</span>
-          </div>
-        </div>
-
-        {/* Tagline reveal */}
-        <p
-          className={`text-primary-foreground/60 text-sm font-body tracking-wider text-center max-w-xs transition-all duration-500 ${
-            progress > 50 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-          }`}
-        >
-          Como una selección campeona, en Akairos jugamos en equipo por tu obra ⚽🇨🇴
-        </p>
       </div>
 
-      {/* Corner accents */}
-      <div className={`absolute top-8 left-8 w-12 h-12 border-l-2 border-t-2 border-primary/30 transition-all duration-700 ${progress > 20 ? "opacity-100" : "opacity-0"}`} />
-      <div className={`absolute top-8 right-8 w-12 h-12 border-r-2 border-t-2 border-primary/30 transition-all duration-700 ${progress > 40 ? "opacity-100" : "opacity-0"}`} />
-      <div className={`absolute bottom-8 left-8 w-12 h-12 border-l-2 border-b-2 border-primary/30 transition-all duration-700 ${progress > 60 ? "opacity-100" : "opacity-0"}`} />
-      <div className={`absolute bottom-8 right-8 w-12 h-12 border-r-2 border-b-2 border-primary/30 transition-all duration-700 ${progress > 80 ? "opacity-100" : "opacity-0"}`} />
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes drawLine {
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes floatY {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+        @keyframes pencilDraw {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(-8px, 4px) rotate(-2deg); }
+          50% { transform: translate(6px, -2px) rotate(1deg); }
+          75% { transform: translate(-4px, 3px) rotate(-1deg); }
+        }
+      `}</style>
     </div>
   );
 };

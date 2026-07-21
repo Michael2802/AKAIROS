@@ -15,15 +15,12 @@ import WhatsAppBot from "@/components/WhatsAppBot";
 const PRELOADER_KEY = "akairos_preloaded";
 
 const Index = () => {
-  const [preloaderDone, setPreloaderDone] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return sessionStorage.getItem(PRELOADER_KEY) === "1";
-  });
+  const [preloaderDone, setPreloaderDone] = useState(false);
 
   const handlePreloaderComplete = useCallback(() => {
-    sessionStorage.setItem(PRELOADER_KEY, "1");
     setPreloaderDone(true);
   }, []);
+
 
   return (
     <div className="min-h-screen bg-background">
